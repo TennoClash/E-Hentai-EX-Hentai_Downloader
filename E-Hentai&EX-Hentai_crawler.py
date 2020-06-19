@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from _overlapped import NULL
 
 print("E-Hentai&EX-Hentai下载器V1.0")
-print("*蛇蛇著*")
+
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36','Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8','Upgrade-Insecure-Requests':'1'}
 def saveFile(url,path,cookiep):
     if(cookiep!=NULL):
