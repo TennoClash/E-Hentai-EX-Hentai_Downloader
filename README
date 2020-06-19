@@ -1,0 +1,1 @@
+爬取exhentai需要cookies，去网页的控制台用document.cookies打出来就行了。比较蠢，但是能用。下载慢和下载失败是网的问题，科学一下即可。
