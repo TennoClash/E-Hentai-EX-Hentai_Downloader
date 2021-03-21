@@ -9,7 +9,7 @@ import re
 from bs4 import BeautifulSoup
 from _overlapped import NULL
 
-print("E-Hentai&EX-Hentai下载器V1.0")
+print("E-Hentai&EX-Hentai下载器V1.1")
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36',
