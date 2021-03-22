@@ -1,5 +1,9 @@
 爬取exhentai需要cookies，去网页的控制台用document.cookies打出来就行了(别带引号)。比较蠢，但是能用。下载慢和下载失败是网的问题，科学一下即可。
 tag的写法遵循Gallery Searching，详见 http://ehwiki.org/wiki/Gallery_Searching
+不知为何360报毒？
     2021/3/21 新增功能
     根据tag下载，下载数可自行选择
+
+    2021/3/22 新增功能
+    多进程下载，最多10个同时下
 有添加新功能想法的欢迎发issue！    
