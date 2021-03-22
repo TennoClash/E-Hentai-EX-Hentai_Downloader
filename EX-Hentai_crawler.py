@@ -8,11 +8,11 @@ import urllib
 import re
 from bs4 import BeautifulSoup
 from _overlapped import NULL
-
-print("E-Hentai&EX-Hentai下载器V1.1")
+import multiprocessing
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 '
+                  'Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
     'Upgrade-Insecure-Requests': '1'}
 
@@ -55,7 +55,6 @@ def getWebsite(url, time1, spath, cookiep):
     endTime1 = time.time()
     print("耗时：", end=' ')
     print(endTime1 - time1)
-
 
 
 def getPicUrl(url, cookiep):
@@ -146,7 +145,36 @@ def menu_tag_urls(cookies2, f_tag, f_tag_num):
         return urls
 
 
-def menu_tag_download(m_urls, cookies2):
+def menu_tag_download(url, cookies2, spath, startTime1):
+    try:
+        print('menu_tag_download')
+        if cookies2 != NULL:
+            site = requests.get(url, headers=headers, cookies=cookies2)
+        else:
+            site = requests.get(url, headers=headers)
+        content = site.text
+        soup = BeautifulSoup(content, 'lxml')
+        divs = soup.find_all(class_='gdtm')
+        title = str(soup.h1.get_text())
+        page = 0
+        for div in divs:
+            page = page + 1
+    except:
+        print('错误,输入或网络问题')
+        menu()
+    else:
+        print('本子名 ' + title + ',共 ' + str(page) + ' 页,开始爬取')
+        rr = r"[\/\\\:\*\?\"\<\>\|]"
+        new_title = re.sub(rr, "-", title)
+        if os.path.exists(spath + new_title):
+            getWebsite(url, startTime1, spath, cookies2)
+        else:
+            os.mkdir(spath + new_title)
+            getWebsite(url, startTime1, spath, cookies2)
+
+
+def tag_multiprocessing(m_urls, cookies2):
+
     print("选择保存位置文件夹")
     root = tk.Tk()
     root.withdraw()
@@ -154,36 +182,18 @@ def menu_tag_download(m_urls, cookies2):
     print('保存路径:', spath)
     startTime1 = time.time()
     print('--获取信息中--')
+    pool = multiprocessing.Pool(processes=10)
     for url in m_urls:
-        try:
-            if cookies2 != NULL:
-                site = requests.get(url, headers=headers, cookies=cookies2)
-            else:
-                site = requests.get(url, headers=headers)
-            content = site.text
-            soup = BeautifulSoup(content, 'lxml')
-            divs = soup.find_all(class_='gdtm')
-            title = str(soup.h1.get_text())
-            page = 0
-            for div in divs:
-                page = page + 1
-        except:
-            print('错误,输入或网络问题')
-            menu()
-        else:
-            print('本子名 ' + title + ',共 ' + str(page) + ' 页,开始爬取')
-            rr = r"[\/\\\:\*\?\"\<\>\|]"
-            new_title = re.sub(rr, "-", title)
-            if os.path.exists(spath + new_title):
-                getWebsite(url, startTime1, spath, cookies2)
-            else:
-                os.mkdir(spath + new_title)
-                getWebsite(url, startTime1, spath, cookies2)
+        print(url)
+        pool.apply_async(menu_tag_download, (url, cookies2, spath, startTime1))
+    pool.close()
+    pool.join()
 
 
 def menu():
     cookies2 = NULL
     m_urls = []
+    print("E-Hentai&EX-Hentai下载器V1.1")
     print('可爬取e-hentai和exhentai的表里站下的内容')
     print('Win10下使用可能会有卡住窗口缓冲区的问题，若遇到某张图片久久没有下载成功的情况，按任意键即可')
     print('*****注意*****需要爬取ehentai还是exhentai?')
@@ -205,7 +215,10 @@ def menu():
         f_tag_num = input('输入下载数量\n')
         f_tag_num = int(f_tag_num)
         m_urls = menu_tag_urls(cookies2, f_tag, f_tag_num)
-        menu_tag_download(m_urls, cookies2)
+
+        tag_multiprocessing(m_urls, cookies2)
 
 
-menu()
+if __name__ == "__main__":
+    multiprocessing.freeze_support()
+    menu()
