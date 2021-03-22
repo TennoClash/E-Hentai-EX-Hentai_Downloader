@@ -193,7 +193,7 @@ def tag_multiprocessing(m_urls, cookies2):
 def menu():
     cookies2 = NULL
     m_urls = []
-    print("E-Hentai&EX-Hentai下载器V1.1")
+    print("E-Hentai&EX-Hentai下载器V1.2")
     print('可爬取e-hentai和exhentai的表里站下的内容')
     print('Win10下使用可能会有卡住窗口缓冲区的问题，若遇到某张图片久久没有下载成功的情况，按任意键即可')
     print('*****注意*****需要爬取ehentai还是exhentai?')
